@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -23,12 +26,6 @@ jobs:
       - name: Build EXE
         run: |
           pyinstaller --onefile --windowed --name "推文管理工具" tweet_manager_gui.py
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: 推文管理工具-Windows
-          path: dist/推文管理工具.exe
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
