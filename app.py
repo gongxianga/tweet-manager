@@ -350,10 +350,9 @@ def api_settings():
 def api_configure_cookie():
     auth_token = request.json.get("auth_token", "")
     ct0 = request.json.get("ct0", "")
-    cookie = f"auth_token={auth_token}; ct0={ct0}"
     try:
         result = subprocess.run(
-            ["agent-reach", "configure", "twitter-cookies", cookie],
+            ["xfetch", "auth", "set", "--auth-token", auth_token, "--ct0", ct0],
             capture_output=True, text=True, timeout=15
         )
         if result.returncode == 0:
