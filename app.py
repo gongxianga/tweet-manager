@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Tweet Manager - 本地网页版
-运行: python app.py  然后打开 http://localhost:5000
+运行: python app.py  然后打开 http://localhost:8888
 """
 
 import subprocess
@@ -358,6 +358,6 @@ def api_configure_cookie():
 if __name__ == "__main__":
     import webbrowser
     print("启动推文管理工具...")
-    print("浏览器将自动打开 http://localhost:5000")
+    print("浏览器将自动打开 http://localhost:8888")
     webbrowser.open("http://localhost:8888")
     app.run(port=8888, debug=False)
