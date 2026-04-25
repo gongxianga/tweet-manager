@@ -22,12 +22,10 @@ source .venv/bin/activate
 echo "[3/4] 安装依赖..."
 pip install flask anthropic --quiet
 
-# 安装 xreach
-echo "[4/4] 安装 xreach..."
-if ! command -v xreach &>/dev/null; then
-    pip install "https://github.com/Panniantong/agent-reach/archive/main.zip" --quiet
-    agent-reach install --env=auto --channels=twitter
-fi
+# 安装 xfetch
+echo "[4/4] 安装 xfetch..."
+pip install "https://github.com/Panniantong/agent-reach/archive/main.zip" --quiet
+agent-reach install --env=auto --channels=twitter
 
 # 生成启动脚本
 cat > start.sh << 'EOF'
