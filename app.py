@@ -159,13 +159,17 @@ HTML = """<!DOCTYPE html>
 
     <div class="settings-label" style="margin-top:24px">X / Twitter Cookie 配置</div>
     <p class="hint" style="margin-bottom:10px">
-      1. 在浏览器登录 x.com &nbsp;
-      2. 安装 <a href="https://chromewebstore.google.com/detail/cookie-editor/" target="_blank">Cookie-Editor</a> 扩展 &nbsp;
-      3. 点击扩展 → Export → Header String &nbsp;
-      4. 粘贴到下方
+      在浏览器登录 x.com，按 F12 打开开发者工具 → Application → Cookies → https://x.com，找到以下两个值填入
     </p>
     <div class="row">
-      <input type="text" id="cookie-str" placeholder="粘贴 Cookie Header String..." style="width:500px">
+      <label style="width:90px">auth_token</label>
+      <input type="text" id="cookie-auth-token" placeholder="auth_token 值" style="width:380px">
+    </div>
+    <div class="row">
+      <label style="width:90px">ct0</label>
+      <input type="text" id="cookie-ct0" placeholder="ct0 值" style="width:380px">
+    </div>
+    <div class="row">
       <button class="btn btn-outline" onclick="configureCookie()">配置 Cookie</button>
     </div>
     <div id="settings-msg"></div>
@@ -256,16 +260,18 @@ async function saveSettings() {
 }
 
 async function configureCookie() {
-  const cookie = document.getElementById('cookie-str').value.trim();
-  if (!cookie) { alert('请先粘贴 Cookie 字符串'); return; }
+  const auth_token = document.getElementById('cookie-auth-token').value.trim();
+  const ct0 = document.getElementById('cookie-ct0').value.trim();
+  if (!auth_token || !ct0) { alert('请填写 auth_token 和 ct0'); return; }
   const res = await fetch('/api/configure-cookie', {
     method: 'POST', headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({cookie})
+    body: JSON.stringify({auth_token, ct0})
   }).then(r => r.json());
   const msg = document.getElementById('settings-msg');
   if (res.ok) {
     msg.innerHTML = '<p style="color:green;margin-top:8px">Cookie 配置成功！</p>';
-    document.getElementById('cookie-str').value = '';
+    document.getElementById('cookie-auth-token').value = '';
+    document.getElementById('cookie-ct0').value = '';
   } else {
     msg.innerHTML = `<p style="color:red;margin-top:8px">失败：${res.error}</p>`;
   }
@@ -342,7 +348,9 @@ def api_settings():
 
 @app.route("/api/configure-cookie", methods=["POST"])
 def api_configure_cookie():
-    cookie = request.json.get("cookie", "")
+    auth_token = request.json.get("auth_token", "")
+    ct0 = request.json.get("ct0", "")
+    cookie = f"auth_token={auth_token}; ct0={ct0}"
     try:
         result = subprocess.run(
             ["agent-reach", "configure", "twitter-cookies", cookie],
