@@ -1,0 +1,2 @@
+anthropic
+pyinstaller
