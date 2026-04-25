@@ -360,4 +360,4 @@ if __name__ == "__main__":
     print("启动推文管理工具...")
     print("浏览器将自动打开 http://localhost:8888")
     webbrowser.open("http://localhost:8888")
-    app.run(port=8888, debug=False)
+    app.run(host="0.0.0.0", port=8888, debug=False)
